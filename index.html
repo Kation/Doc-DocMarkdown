@@ -70,7 +70,7 @@
                     q[a[0]] = decodeURIComponent(a[1]);
                 });
                 if (q.redirect !== undefined) {
-                    window.history.replaceState(null, null, redirect);
+                    window.history.replaceState(null, null, q.redirect);
                 }
             }
         }(window.location))
