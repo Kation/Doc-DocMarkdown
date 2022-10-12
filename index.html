@@ -84,10 +84,7 @@
                 if (location.hostname !== 'localhost')
                     defaultUri = defaultUri + '.br';
 
-                const fetchResources = fetch(defaultUri, {
-                    //cache: 'no-cache',
-                    integrity: integrity,
-                });
+                const fetchResources = fetch(defaultUri, {});
                 allResourcesBeingLoaded.push(fetchResources);
                 return fetchResources.then(async (r) => {
                     i++;
