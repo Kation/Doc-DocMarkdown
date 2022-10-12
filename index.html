@@ -79,10 +79,10 @@
         var allResourcesBeingLoaded = [];
         Blazor.start({ // start manually with loadBootResource
             loadBootResource: function (type, name, defaultUri, integrity) {
-                if (!defaultUri.endsWith(".dll"))
-                    return;
+                if (type == "dotnetjs")
+                    return defaultUri;
 
-                if (location.hostname !== 'localhost')
+                if (location.hostname !== 'localhost' && defaultUri.endsWith(".dll"))
                     defaultUri = defaultUri + '.br';
 
                 const fetchResources = fetch(defaultUri, {});
@@ -97,7 +97,7 @@
                     progressbar.innerText = pct;
                     console.info(i + '/' + total + ' (' + pct + ') ' + name);
 
-                    if (location.hostname !== 'localhost') {
+                    if (location.hostname !== 'localhost' && defaultUri.endsWith(".dll")) {
                         const originalResponseBuffer = await r.arrayBuffer();
                         const originalResponseArray = new Int8Array(originalResponseBuffer);
                         const decompressedResponseArray = BrotliDecode(originalResponseArray);
