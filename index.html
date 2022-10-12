@@ -78,18 +78,18 @@
         var allResourcesBeingLoaded = [];
         Blazor.start({ // start manually with loadBootResource
             loadBootResource: function (type, name, defaultUri, integrity) {
-                if (type == "dotnetjs")
-                    return defaultUri;
+                if (!defaultUri.endsWith(".dll"))
+                    return;
 
-                var fetchResources = fetch(defaultUri, {
-                    cache: 'no-cache',
+                if (location.hostname !== 'localhost')
+                    defaultUri = defaultUri + '.br';
+
+                const fetchResources = fetch(defaultUri, {
+                    //cache: 'no-cache',
                     integrity: integrity,
-                    headers: { 'MyCustomHeader': 'My custom value' }
                 });
-
-
                 allResourcesBeingLoaded.push(fetchResources);
-                fetchResources.then((r) => {
+                return fetchResources.then(async (r) => {
                     i++;
                     var total = allResourcesBeingLoaded.length;
                     var progressbar = document.getElementById('progressBar');
@@ -98,6 +98,18 @@
                     progressbar.style.width = pct;
                     progressbar.innerText = pct;
                     console.info(i + '/' + total + ' (' + pct + ') ' + name);
+
+                    if (location.hostname !== 'localhost') {
+                        const originalResponseBuffer = await r.arrayBuffer();
+                        const originalResponseArray = new Int8Array(originalResponseBuffer);
+                        const decompressedResponseArray = BrotliDecode(originalResponseArray);
+                        const contentType = type ===
+                            'dotnetwasm' ? 'application/wasm' : 'application/octet-stream';
+                        return new Response(decompressedResponseArray,
+                            { headers: { 'content-type': contentType } });
+                    }
+                    else
+                        return r;
                 });
                 return fetchResources;
             }
