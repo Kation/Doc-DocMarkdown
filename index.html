@@ -47,7 +47,8 @@
     <script src="js/material.min.js"></script>
     <script src="_content/Blazorise.Material/blazorise.material.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
-    <script type="text/javascript">
+    <script type="module">
+        import { BrotliDecode } from './js/decode.min.js';
         window.highlightCode = (id) => {
             try {
                 hljs.highlightElement(document.getElementById(id));
