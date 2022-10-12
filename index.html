@@ -49,6 +49,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
     <script type="module">
         import { BrotliDecode } from './js/decode.min.js';
+
         window.highlightCode = (id) => {
             try {
                 hljs.highlightElement(document.getElementById(id));
@@ -85,11 +86,9 @@
                 if (location.hostname !== 'localhost')
                     defaultUri = defaultUri + '.br';
 
-                const fetchResources = fetch(defaultUri, {});
+                const fetchResources = fetch(defaultUri, { cache: 'no-cache' });
                 allResourcesBeingLoaded.push(fetchResources);
                 return fetchResources.then(async (r) => {
-                    const originalResponseBuffer = await r.arrayBuffer();
-
                     i++;
                     var total = allResourcesBeingLoaded.length;
                     var progressbar = document.getElementById('progressBar');
@@ -100,6 +99,7 @@
                     console.info(i + '/' + total + ' (' + pct + ') ' + name);
 
                     if (location.hostname !== 'localhost') {
+                        const originalResponseBuffer = await r.arrayBuffer();
                         const originalResponseArray = new Int8Array(originalResponseBuffer);
                         const decompressedResponseArray = BrotliDecode(originalResponseArray);
                         const contentType = type ===
