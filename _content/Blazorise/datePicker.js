@@ -1,5 +1,5 @@
-﻿import "./vendors/flatpickr.js?v=1.0.6.0";
-import * as utilities from "./utilities.js?v=1.0.6.0";
+﻿import "./vendors/flatpickr.js?v=1.1.3.1";
+import * as utilities from "./utilities.js?v=1.1.3.1";
 
 const _pickers = [];
 
@@ -50,7 +50,9 @@ export function initialize(element, elementId, options) {
         },
         time_24hr: options.timeAs24hr ? options.timeAs24hr : false,
         clickOpens: !(options.readOnly || false),
-        disable: options.disabledDates || []
+        disable: options.disabledDates || [],
+        inline: options.inline || false,
+        disableMobile: true
     };
 
     if (options.selectionMode)
@@ -126,6 +128,10 @@ export function updateOptions(element, elementId, options) {
 
         if (options.selectionMode.changed) {
             picker.set("mode", options.selectionMode.value);
+        }
+
+        if (options.inline.changed) {
+            picker.set("inline", options.inline.value || false);
         }
     }
 }
